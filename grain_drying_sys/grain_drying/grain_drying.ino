@@ -61,13 +61,11 @@ volatile float beta = 1;
 
 ISR(TIMER3_COMPA_vect){
    //0,25 sec
-  //if(count%4==0) //aprox 1 se
   if(flag==1){
     count++;
     ADMUX &= 0b11111110; //A0
     read_adc();
     light = ADC >> 2;
-    //OCR0A = light;
     ADMUX |= 0b00000001;//A1
     read_adc();
     temperature = ADC >> 2;
@@ -119,7 +117,6 @@ ISR(TIMER3_COMPA_vect){
 
       OCR1A = 255-temperature;
       OCR1B = light;
-      //PINB |= 0b00010000;
     }
      else{
         count=0;
@@ -161,8 +158,6 @@ int main(){
    */
   ADMUX = 0b01000000;
   ADCSRA |= 0b10000111;
-  //ADCSRA &= 0b01111111;
-  //ADCSRB &= 11110111;
   
   DDRB|=0b11110000;//need?Yes TCCR0A last 2 bits overrides port func
   PORTB = 0b00000000;
@@ -177,7 +172,6 @@ int main(){
   
   TCCR1A = 0b11111101;
 
-  //TCCR2A = 0b11110011;
   /*
    * clk divided by 64
    * Top = 0xFF
@@ -186,24 +180,16 @@ int main(){
   TCCR0B = 0b00000011;
   
   TCCR1B = 0b00001011;
-
-  //TCCR2B = 0b00000100;
-  
+ 
   OCR1A = 0x00FF; //PIN 11 PB5
   OCR1B = 0x00FF; //PIN 12 PB6 16-bit
   OCR0A = 0xFF; //PIN 13 duty cycle
   OCR2A = 0xFF; //PIN 10
   OCR2B = 0xFF;//PIN 9
 
-
-ADMUX |= 0b00000001;
-//count=640;
   while (1){
-    //secagem test
     //A0 = LIGHT
     //A1 = TEMPERATURE
-    //L0 P LIGHT = 11 --> OCR1A
-    //L1 P TEMPERATURE = 12 -->OCR1B
     //OCR1B = temperature;
     //OCR1A = light;
   }
